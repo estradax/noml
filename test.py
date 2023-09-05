@@ -12,6 +12,8 @@ test_loader = DataLoader(test_dataset, batch_size=1000)
 
 model.load_state_dict(torch.load('cnn-v1'))
 
+losses = []
+
 if __name__ == '__main__':
     model.eval()
 
@@ -21,6 +23,8 @@ if __name__ == '__main__':
                 logits = model(X)
                 loss = criterion(logits, y)
 
+                losses.append(loss.item())
                 print('Loss:', loss.item())
 
-    
+        avg_loss = sum(losses) / len(losses)
+        print('Average loss:', avg_loss)
