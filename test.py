@@ -13,6 +13,7 @@ test_loader = DataLoader(test_dataset, batch_size=1000)
 model.load_state_dict(torch.load('cnn-v1'))
 
 losses = []
+accuracy = []
 
 if __name__ == '__main__':
     model.eval()
@@ -24,7 +25,13 @@ if __name__ == '__main__':
                 loss = criterion(logits, y)
 
                 losses.append(loss.item())
-                print('Loss:', loss.item())
+
+                acc = (torch.argmax(logits, dim=1) == y).sum().item() / len(y)
+                accuracy.append(acc)
+
+                print('Loss:', loss.item(), 'Accuracy:', acc)
 
         avg_loss = sum(losses) / len(losses)
+        avg_accuracy = sum(accuracy) / len(accuracy)
         print('Average loss:', avg_loss)
+        print('Average accuracy:', avg_accuracy)

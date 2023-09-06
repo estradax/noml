@@ -11,6 +11,7 @@ train_dataset = datasets.MNIST('data/', download=True, transform=mnist_transform
 train_loader = DataLoader(train_dataset, batch_size=32)
 
 losses = []
+accuracy = []
 
 if __name__ == '__main__':
     model.train()
@@ -26,8 +27,17 @@ if __name__ == '__main__':
             optimizer.step()
 
             losses.append(loss.item())
-            print('Loss:', loss.item())
+
+            acc = (torch.argmax(logits, dim=1) == y).sum().item() / len(y)
+            accuracy.append(acc)
+
+            print('Loss:', loss.item(), 'Accuracy:', acc)
+
+
 
     avg_loss = sum(losses) / len(losses)
+    avg_accuracy = sum(accuracy) / len(accuracy)
     print('Average loss:', avg_loss)
+    print('Average accuracy:', avg_accuracy)
+
     torch.save(model.state_dict(), 'cnn-v1')
